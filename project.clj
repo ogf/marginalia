@@ -6,7 +6,8 @@
    [org.clojure/tools.namespace "0.1.1"]
    [org.clojure/tools.cli "0.2.1"]
    [hiccup "0.3.7"]
-   [org.markdownj/markdownj "0.3.0-1.0.2b4"]]
+   [org.markdownj/markdownj "0.3.0-1.0.2b4"]
+   [de.ubercode.clostache/clostache "1.2.0"]]
   :dev-dependencies
   [[lein-clojars "0.6.0"]
    [jline "0.9.94"]

@@ -36,6 +36,7 @@
             [clojure.string  :as str])
   (:use [marginalia
          [html :only (uberdoc-html index-html single-page-html)]
+         [latex :only (uberdoc-latex)]
          [parser :only (parse-file)]]
         [clojure.tools
          [namespace :only (read-file-ns-decl)]
@@ -182,6 +183,11 @@
                            :contents index})]
            (spit (:name f) (:contents f)))))
 
+(defn pick-output-fn [output-file-name]
+  (cond
+   (.endsWith output-file-name "tex") uberdoc-latex
+   :else uberdoc-html))
+
 (defn uberdoc!
   "Generates an uberdoc html file from 3 pieces of information:
 
@@ -192,7 +198,7 @@
      - :version
   "
   [output-file-name files-to-analyze props]
-  (let [source (uberdoc-html
+  (let [source ((pick-output-fn output-file-name)
                 props
                 (map path-to-doc files-to-analyze))]
     (spit output-file-name source)))
