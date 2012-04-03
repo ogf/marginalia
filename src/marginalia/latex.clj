@@ -7,8 +7,6 @@
   (:use [marginalia.html :only [slurp-resource]]))
 
 
-(def template (slurp-resource "latex.mustache"))
-
 ;; ## Namespace header calculation
 
 (def headers ["subsubsection" "subsection" "section"])
@@ -102,9 +100,12 @@
                         namespaces)]
     {:namespaces namespaces :project project-metadata}))
 
+(def default-template (slurp-resource "latex.mustache"))
+
 (defn uberdoc-latex
   "It uses mustache to generate the LaTeX contents using a
   template. Before it needs to convert the data to the format expected
   for the template"
-  [project-metadata docs]
-  (mustache/render template (as-data-for-template project-metadata docs)))
+  [{{:keys [template]} :marginalia :as project-metadata} docs]
+  (mustache/render (or (and template (slurp template)) default-template)
+                   (as-data-for-template project-metadata docs)))

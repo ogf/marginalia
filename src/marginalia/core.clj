@@ -242,7 +242,7 @@
 
    If no source files are found, complain with a usage message."
   [args & [project]]
-  (let [[{:keys [dir file name version desc deps css js]} files help]
+  (let [[{:keys [dir file name version desc deps css js template]} files help]
         (cli args
              ["-d" "--dir" "Directory into which the documentation will be written" :default "./docs"]
              ["-f" "--file" "File into which the documentation will be written" :default "uberdoc.html"]
@@ -254,7 +254,10 @@
              ["-c" "--css" "Additional css resources <resource1>;<resource2>;...
                  If not given will be taken from project.clj."]
              ["-j" "--js" "Additional javascript resources <resource1>;<resource2>;...
-                 If not given will be taken from project.clj"])
+                 If not given will be taken from project.clj"]
+             ["-t" "--template"
+              "The file with a mustache template to use if generating LaTeX"
+              :default nil])
         sources (distinct (format-sources (seq files)))]
     (if-not sources
       (do
@@ -267,7 +270,8 @@
               choose #(or %1 %2)
               marg-opts (merge-with choose
                                     {:css (when css (.split css ";"))
-                                     :javascript (when js (.split js ";"))}
+                                     :javascript (when js (.split js ";"))
+                                     :template template}
                                     (:marginalia project-clj))
               opts (merge-with choose
                                {:name name
